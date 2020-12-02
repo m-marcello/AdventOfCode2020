@@ -30,11 +30,8 @@ fn check_password(line: String) -> bool {
     // }
     let first_entry: &str = line_split.next().unwrap();
     let second_entry: &str = line_split.next().unwrap();
-    // let passwd: String = line_split[2].to_string();
-    // let c: char = line_split[1].to_string().chars().nth(0).unwrap();
-    // let line_split2: Vec<&str> = line_split[0].to_string().split("-").collect();
     let passwd: &str = line_split.next().unwrap();
-    let character = second_entry.chars().nth(0).unwrap();
+    let character: char = second_entry.chars().nth(0).unwrap();
     let line_split2: Vec<&str> = first_entry.split("-").collect();
     if line_split2.len() != 2 {
         panic!("line '{}' is incorrect format, beginning is incorrect.", line);
@@ -42,17 +39,37 @@ fn check_password(line: String) -> bool {
     let small: usize = line_split2[0].to_string().parse().unwrap();
     let big: usize = line_split2[1].to_string().parse().unwrap();
     
-    // count how often the character appears in the password
-    let mut count: usize = 0;
-    for c in passwd.chars() {
-        if character == c {
-            count += 1;
-        }
+    // check if the char appears in one of the two positions
+    let length = passwd.len();
+    let mut char_small: char = '*';
+    let mut char_big: char = '*';
+    if length >= small {
+        char_small = passwd.chars().nth(small - 1).unwrap();
     }
-    if small <= count && count <= big {
-        println!("correct\n");
+    if length >= big {
+        char_big = passwd.chars().nth(big - 1).unwrap();
+    }
+    println!("characters are {} and {}", char_small, char_big);
+    if char_small == character && char_big != character {
+        println!("correct at position {}\n", small);
         return true
     }
+    if char_small != character && char_big == character {
+        println!("correct at position {}\n", big);
+        return true
+    }
+
+    // count how often the character appears in the password
+    // let mut count: usize = 0;
+    // for c in passwd.chars() {
+    //     if character == c {
+    //         count += 1;
+    //     }
+    // }
+    // if small <= count && count <= big {
+    //     println!("correct\n");
+    //     return true
+    // }
     false
 }
 
